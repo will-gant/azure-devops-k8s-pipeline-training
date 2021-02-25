@@ -1,0 +1,23 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+jobs:
+- deployment: busybox
+  pool:
+    vmImage: ubuntu-latest
+  environment: staging
+  strategy: 
+  runOnce:
+    deploy:
+      steps:
+      - task: KubernetesManifest@0
+        displayName: Deploy to Kubernetes cluster
+        inputs:
+          action: deploy
+          namespace: default
+          manifests: $(System.ArtifactsDirectory)/pod.yml

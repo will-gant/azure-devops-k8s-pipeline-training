@@ -10,7 +10,7 @@ jobs:
 - deployment: busybox
   pool:
     vmImage: ubuntu-latest
-  environment: prod
+  environment: prod.default
   strategy: 
     runOnce:
       deploy:

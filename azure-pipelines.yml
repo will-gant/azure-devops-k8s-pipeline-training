@@ -10,6 +10,13 @@ resources:
 - repo: self
 
 jobs:
+- job: test
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - script: |
+          echo "HERE'S OUR DIRECTORY STUFF"
+          ls $(Build.SourcesDirectory)
 - deployment: busybox
   pool:
     vmImage: ubuntu-latest

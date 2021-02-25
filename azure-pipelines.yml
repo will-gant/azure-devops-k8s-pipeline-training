@@ -25,9 +25,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - script: |
-            echo "HERE'S OUR DIRECTORY STUFF"
-            ls $(Build.SourcesDirectory)
+        - checkout: self 
         - task: KubernetesManifest@0
           displayName: Deploy to Kubernetes cluster
           inputs:

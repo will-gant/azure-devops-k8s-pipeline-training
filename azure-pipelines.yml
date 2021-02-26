@@ -9,26 +9,39 @@ trigger:
 resources:
 - repo: self
 
-jobs:
-- job: test
-  pool:
-    vmImage: ubuntu-latest
-  steps:
-  - script: |
-          echo "HERE'S OUR DIRECTORY STUFF"
-          ls $(Build.SourcesDirectory)
-- deployment: busybox
-  pool:
-    vmImage: ubuntu-latest
-  environment: prod.default
-  strategy: 
-    runOnce:
-      deploy:
-        steps:
-        - checkout: self 
-        - task: KubernetesManifest@0
-          displayName: Deploy to Kubernetes cluster
-          inputs:
-            action: deploy
-            namespace: default
-            manifests: '$(Build.SourcesDirectory)/pod.yml'
+stages:
+- stage: deploy-staging
+  jobs:
+  - deployment: busybox
+    pool:
+      vmImage: ubuntu-latest
+    environment: staging.default
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self 
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              namespace: default
+              manifests: '$(Build.SourcesDirectory)/pod.yml'
+
+- stage: deploy-prod
+  jobs:
+  - deployment: busybox
+    pool:
+      vmImage: ubuntu-latest
+    environment: prod.default
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self 
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              namespace: default
+              manifests: '$(Build.SourcesDirectory)/pod.yml'
